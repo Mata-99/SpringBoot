@@ -1,6 +1,7 @@
 package com.example.Hardware.Repository;
 
 import com.example.Hardware.Domain.Hardware;
+import com.example.Hardware.Domain.HardwareDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -20,5 +21,7 @@ public class MockHardwareRepositoryImpl implements HardwareRepository{
     public List<Hardware> getHardware(){
         return  this.hardwareList;
     }
+
+
 
 }
