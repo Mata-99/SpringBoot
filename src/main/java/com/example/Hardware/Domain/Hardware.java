@@ -15,4 +15,6 @@ private String tip;
 private Integer kolicinaNaStanju;
 
 
+    public Hardware(String naziv, String novi, Double cijena, String tip) {
+    }
 }

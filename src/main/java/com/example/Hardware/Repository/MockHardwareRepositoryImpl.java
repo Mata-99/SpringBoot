@@ -18,6 +18,21 @@ public class MockHardwareRepositoryImpl implements HardwareRepository{
        hardwareList.add(new Hardware("Kingston", "RAM001", 120.99, "RAM", 15));
     }
     @Override
+    public Hardware getHardwareByName(String naziv ){
+        for (Hardware hardware : hardwareList){
+            if(hardware.getNaziv().equalsIgnoreCase(naziv)){
+                return hardware;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public Hardware saveHardware() {
+        return null;
+    }
+
+    @Override
     public List<Hardware> getHardware(){
         return  this.hardwareList;
     }

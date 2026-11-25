@@ -14,6 +14,17 @@ public class HardwareServiceImpl implements  HardwareService{
 
     HardwareRepository hardwareRepository;
 
+    public Hardware getHardwareByName(String name) {
+        return hardwareRepository.getHardwareByName(name);
+    }
+
+
+
+    @Override
+    public Hardware saveHardware() {
+        return null;
+    }
+
     @Override
     public List<Hardware> getHardware() {
         return List.of();
@@ -30,6 +41,16 @@ public class HardwareServiceImpl implements  HardwareService{
                         h.getTip()
                 ))
                 .toList();
+    }
+    @Override
+    public Hardware saveHardware(HardwareDTO hardwareDTO){
+         Hardware hardware = new Hardware(
+                 hardwareDTO.getNaziv(),
+                 "novi",
+                 hardwareDTO.getCijena(),
+                 hardwareDTO.getTip()
+         );
+         return hardwareRepository.saveHardware();
     }
 
 }

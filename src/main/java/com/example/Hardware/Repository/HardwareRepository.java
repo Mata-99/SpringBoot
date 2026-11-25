@@ -10,7 +10,8 @@ import java.util.List;
 
 public interface HardwareRepository {
     List<Hardware> getHardware();
-
+    Hardware getHardwareByName(String naziv);
+    Hardware saveHardware();
 
 
 
