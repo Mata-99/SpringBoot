@@ -22,7 +22,7 @@ public class JdbcRepository implements HardwareRepository{
     private JdbcTemplate jdbcTemplate;
     @Override
     public List<Hardware> getAllHardwares(String hardwareName){
-        return jdbcTemplate.query("SELECT * FROM Hardawre WHERE naziv", new HardwareRowMapperImpl(), hardwareName);
+        return jdbcTemplate.query("SELECT * FROM Hardware WHERE naziv", new HardwareRowMapperImpl(), hardwareName);
     }
 
 
@@ -37,12 +37,19 @@ public class JdbcRepository implements HardwareRepository{
 
     @Override
     public List<Hardware> getHardware() {
-        return null;
+        return jdbcTemplate.query(
+                "SELECT * FROM Hardware",
+                new HardwareRowMapperImpl()
+        );
     }
 
     @Override
     public Hardware getHardwareByName(String naziv) {
-        return null;
+        return (Hardware) jdbcTemplate.queryForObject(
+                "SELECT * FROM Hardware WHERE naziv = ?",
+                new HardwareRowMapperImpl(),
+                naziv
+        );
     }
 
     @Override
@@ -70,12 +77,12 @@ public class JdbcRepository implements HardwareRepository{
     public Optional<Hardware> getHardwareById(Integer id) {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("id", id);
-        return Optional.ofNullable((Hardware) jdbcTemplate.queryForObject("SELECT * FROM Hardware WHERE id = :id" , new HardwareRowMapperImpl(), parameters));
+        return Optional.ofNullable((Hardware) jdbcTemplate.queryForObject("SELECT * FROM Hardware WHERE id = ?" , new HardwareRowMapperImpl(), parameters));
     }
 
     @Override
     public boolean hardwareById(Integer id) {
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Hardware WHERE id = ?", Integer.class);
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Hardware WHERE id = ?", Integer.class, id);
         return  count > 0;
     }
 
