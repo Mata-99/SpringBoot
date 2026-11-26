@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,10 +29,27 @@ public class HardwareController {
         return hardwareService.getHardwareByName(naziv);
     }
     @PostMapping
-    public Integer saveHardware(@Valid @RequestBody HardwareDTO hardwareDTO){
-        Integer generatedId = hardwareService.saveHardware(hardwareDTO).getKolicinaNaStanju();
+    public Hardware saveHardware(@Valid @RequestBody Hardware Hardware){
+        Hardware generatedId = hardwareService.saveHardware(Hardware);
             return generatedId;
         }
+        @PutMapping("/{id}")
+    public ResponseEntity<?> hardwareUpdate(@Valid @RequestBody HardwareDTO hardwareDTO, @PathVariable Integer id){
+        if(hardwareService.hardwareByid(id)) {
+            hardwareService.updateHardware(hardwareDTO, id);
+            return  ResponseEntity.ok(hardwareDTO);
+        }
+        else {
+            return  ResponseEntity.notFound().build();
+        }
+        }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> hardwareDelete(@PathVariable Integer id) {
+        if (hardwareService.deleteHardware(id)) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
     }
 
 

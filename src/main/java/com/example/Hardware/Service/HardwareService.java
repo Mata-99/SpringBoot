@@ -5,14 +5,18 @@ import com.example.Hardware.Domain.HardwareDTO;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface HardwareService {
 
-List<Hardware> getHardware();
+     List<Hardware> getHardware();
      List<HardwareDTO> getHardwareDTO();
      Hardware getHardwareByName(String name);
-     Hardware saveHardware( HardwareDTO hardwareDTO);
+     Hardware saveHardware(Hardware hardware);
+     Optional<HardwareDTO> updateHardware(HardwareDTO hardwareDTO, Integer id);
 
 
-     Hardware saveHardware();
+     boolean hardwareByid(Integer id);
+
+     boolean deleteHardware(Integer id);
 }

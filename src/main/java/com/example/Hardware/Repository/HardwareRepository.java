@@ -6,13 +6,19 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 
 public interface HardwareRepository {
+    List<Hardware> getAllHardwares(String hardwareName);
+
+    Hardware saveHardware(Hardware hardware);
     List<Hardware> getHardware();
     Hardware getHardwareByName(String naziv);
-    Hardware saveHardware();
+    Optional<Hardware> updateHardware(Hardware hardwareToUpdate, Integer id);
+    Optional<Hardware>getHardwareById(Integer id);
 
+    boolean hardwareById(Integer id);
 
-
+    boolean deleteHardware(Integer id);
 }

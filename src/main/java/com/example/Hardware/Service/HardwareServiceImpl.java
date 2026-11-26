@@ -4,6 +4,7 @@ import com.example.Hardware.Domain.Hardware;
 import com.example.Hardware.Domain.HardwareDTO;
 import com.example.Hardware.Repository.HardwareRepository;
 import lombok.AllArgsConstructor;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +12,25 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class HardwareServiceImpl implements  HardwareService{
+    private Hardware convertHardwareDtoToHardware(HardwareDTO dto) {
 
+        return new Hardware(
+                dto.getNaziv(),
+                "UPDATE",
+                dto.getCijena(),
+                dto.getTip(),
+                0,
+                null
+        );
+    }
+    private HardwareDTO convertHardwareDtoToHardwareDTO(Hardware hardware) {
+
+        return new HardwareDTO(
+                hardware.getNaziv(),
+                hardware.getCijena(),
+                hardware.getTip()
+        );
+    }
     HardwareRepository hardwareRepository;
 
     public Hardware getHardwareByName(String name) {
@@ -19,15 +38,9 @@ public class HardwareServiceImpl implements  HardwareService{
     }
 
 
-
-    @Override
-    public Hardware saveHardware() {
-        return null;
-    }
-
     @Override
     public List<Hardware> getHardware() {
-        return List.of();
+        return hardwareRepository.getHardware();
     }
 
     @Override
@@ -42,15 +55,33 @@ public class HardwareServiceImpl implements  HardwareService{
                 ))
                 .toList();
     }
+
+
     @Override
-    public Hardware saveHardware(HardwareDTO hardwareDTO){
-         Hardware hardware = new Hardware(
-                 hardwareDTO.getNaziv(),
-                 "novi",
-                 hardwareDTO.getCijena(),
-                 hardwareDTO.getTip()
-         );
-         return hardwareRepository.saveHardware();
+    public Hardware saveHardware(Hardware hardware) {
+        return hardwareRepository.saveHardware(hardware);
+    }
+    @Override
+    public boolean hardwareByid(Integer id) {
+        return hardwareRepository.hardwareById(id);
+    }
+
+    @Override
+    public Optional<HardwareDTO> updateHardware(HardwareDTO hardwareDTO, Integer id){
+        Optional<Hardware> updateHardwareOptional = hardwareRepository.updateHardware(convertHardwareDtoToHardware(hardwareDTO), id);
+
+        if (updateHardwareOptional.isPresent()) {
+            return Optional.of(
+                    convertHardwareDtoToHardwareDTO(
+                            updateHardwareOptional.get()
+                    )
+            );
+        }
+        return Optional.empty();
+    }
+    @Override
+    public boolean deleteHardware(Integer id) {
+        return hardwareRepository.deleteHardware(id);
     }
 
 }
