@@ -7,7 +7,10 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -19,19 +22,22 @@ public class JdbcRepository implements HardwareRepository{
     private JdbcTemplate jdbcTemplate;
     @Override
     public List<Hardware> getAllHardwares(String hardwareName){
-        return jdbcTemplate.query("SELECT * FROM Hardawre", new HardwareRowMapperImpl());
+        return jdbcTemplate.query("SELECT * FROM Hardawre WHERE naziv", new HardwareRowMapperImpl(), hardwareName);
     }
 
 
     @Override
     public Hardware saveHardware(Hardware hardware) {
-        hardware.
-        return hardware;
+
+        final String sql = "SELECT id FROM FINAL TABLE (INSERT INTO Hardware(naziv, cijena, tip, id) VALUES(?, ?, ?, ?))Hardware";
+                Integer generatedId = jdbcTemplate.queryForObject(sql, Integer.class, hardware.getNaziv(), hardware.getCijena(), hardware.getTip(), hardware.getId());
+        hardware.setId(generatedId);
+        return  hardware;
     }
 
     @Override
     public List<Hardware> getHardware() {
-        return List.of();
+        return null;
     }
 
     @Override
@@ -41,21 +47,46 @@ public class JdbcRepository implements HardwareRepository{
 
     @Override
     public Optional<Hardware> updateHardware(Hardware hardwareToUpdate, Integer id) {
-        return Optional.empty();
+        if (hardwareById(id)) {
+            final String sql = "UPDATE Hardware SET naziv = ? , cijena = ?, tip = ?, id = ? WHERE  id = ?";
+            jdbcTemplate.update(connection -> {
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                preparedStatement.setString(1, hardwareToUpdate.getNaziv());
+                preparedStatement.setDouble(2, hardwareToUpdate.getCijena());
+                preparedStatement.setString(3, hardwareToUpdate.getTip());
+                preparedStatement.setInt(4, hardwareToUpdate.getId());
+
+                return preparedStatement;
+            });
+            hardwareToUpdate.setId(id);
+            return Optional.of(hardwareToUpdate);
+        }
+        else {
+            return  Optional.empty();
+        }
     }
 
     @Override
     public Optional<Hardware> getHardwareById(Integer id) {
-        return Optional.empty();
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("id", id);
+        return Optional.ofNullable((Hardware) jdbcTemplate.queryForObject("SELECT * FROM Hardware WHERE id = :id" , new HardwareRowMapperImpl(), parameters));
     }
 
     @Override
     public boolean hardwareById(Integer id) {
-        return false;
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM Hardware WHERE id = ?", Integer.class);
+        return  count > 0;
     }
 
     @Override
     public boolean deleteHardware(Integer id) {
-        return false;
+        if(hardwareById(id)){
+            jdbcTemplate.update("DELETE FROM Hardware WHERE id = ? ", id);
+            return  true;
+        }
+        else {
+            return false;
+        }
     }
 }

@@ -28,6 +28,10 @@ public class MockHardwareRepositoryImpl implements HardwareRepository{
     }
 
 
+    @Override
+    public List<Hardware> getAllHardwares(String hardwareName) {
+        return null;
+    }
 
     @Override
     public Hardware saveHardware(Hardware hardware) {
@@ -56,6 +60,12 @@ public class MockHardwareRepositoryImpl implements HardwareRepository{
 
         return Optional.empty();
     }
+
+    @Override
+    public Optional<Hardware> getHardwareById(Integer id) {
+        return null;
+    }
+
     @Override
     public boolean hardwareById(Integer id) {
         return hardwareList.stream()
